@@ -59,14 +59,14 @@ Initial_Board = [
 #======================================================================
 
 def check_winner(state):
-    red = 0;
-    blue = 0;
+    red = 0
+    blue = 0
     for i in range(len(state)) :
         for j in  range(len(state[i])):
             if(state[i][j] == 'b'):
-                blue++;
+                blue+=1
             if (state[i][j] == 'r'):
-                red++;
+                red+=1
     if (red == 0) :
         return 'b'
     elif (blue == 0):
