@@ -68,6 +68,7 @@ def play(student_a, student_b, start_state=Initial_Board):
 
         start = time.time()
         move = curr_player.next_move(state)
+        print('Next available position', curr_player.get_next_posible_position(state,(0,2)))
         elapse = time.time() - start
 
         # print(move)
