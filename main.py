@@ -58,6 +58,21 @@ Initial_Board = [
 #     0 1 2 3 4
 #======================================================================
 
+def check_winner(state):
+    red = 0;
+    blue = 0;
+    for i in range(len(state)) :
+        for j in  range(len(state[i])):
+            if(state[i][j] == 'b'):
+                blue++;
+            if (state[i][j] == 'r'):
+                red++;
+    if (red == 0) :
+        return 'b'
+    elif (blue == 0):
+        return 'r'
+    else :
+        return
 
 def play(student_a, student_b, start_state=Initial_Board):
     player_a = imp.load_source(student_a, student_a + ".py")
