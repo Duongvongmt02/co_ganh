@@ -3,6 +3,11 @@ import imp
 import time
 #======================================================================
 
+AROUND_ARRAY_EVEN = [(-1,-1,1,1),(-1,0,1,0),(-1,1,1,-1),(0,1,0,-1)]                       
+AROUND_ARRAY_ODD = [(-1,0,1,0),(0,1,0,-1)]
+AROUND_ARRAY_X = [(0,1),(0,-1)] # X=0
+AROUND_ARRAY_Y = [1,0,-1,0] #Y=0
+POSITION_ARRAY_CORNER = [(0,0),(4,4),(0,4),(4,0)]
 
 def board_print(board, move=[], num=0):
 
@@ -29,6 +34,34 @@ def swapPosition(next_move,state):
     state[next_move[0][0]][next_move[0][1]]=state[next_move[1][0]][next_move[1][1]]
     state[next_move[1][0]][next_move[1][1]]=temp
 
+def checkPosition(position):
+    for coordinate in POSITION_ARRAY_CORNER:
+        if(coordinate == position): return -10; # if coordinate at corner
+    if(position[0] == 0): return -1 # if coordinate x =0
+    elif(position[1] == 0): return 1 # if coordinate y = 0
+    else: return 0 # if coordinate at another
+
+def changeColor(position_1, position_2, state , color):
+    state[position_1[0]][position_1[1]] = color
+    state[position_2[0]][position_2[1]] = color
+
+def isOther(position_above,position_below,state,color,check):
+    if(check==-1):
+            if(state[position_above[0]][position_above[1]]==color and state[position_below[0]][position_below[1]] == color):
+                return true; 
+
+
+def carry(position,state):
+    check = checkPosition(position)
+    if(check == -10): return
+    if(check == -1): 
+        color=state[position[0]][position[1]]
+        position_above = position + AROUND_ARRAY_X[0]
+        position_below = position - AROUND_ARRAY_X[1]   
+        if(isOther(position_above,position_below,state,check)):
+            changeColor(position_below,position_above,state,color)
+
+
 # def move(current, next , state , color):
     
 
@@ -38,6 +71,8 @@ def swapPosition(next_move,state):
 # Student SHOULD implement this function to change current state to new state properly
 def doit(move, state):
     swapPosition(move,state)
+    position=move[1]
+    carry(position,state)
     new_state = board_copy(state)
     return new_state
 
