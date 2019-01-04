@@ -17,8 +17,8 @@ class Player:
         result = [(2, 0), (3, 1)]
         return result
     
-    def status_position(x_position, y_position,color=0):
+    # def status_position(x_position, y_position,color=0):
 
-    def changeColor(position_attack, position_changed, color_attack):
+    # def changeColor(position_attack, position_changed, color_attack):
 
     
