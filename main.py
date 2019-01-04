@@ -24,10 +24,20 @@ def board_copy(board):
         new_board[i] = [] + board[i]
     return new_board
 
+def swapPosition(next_move,state):
+    temp=state[next_move[0][0]][next_move[0][1]]
+    state[next_move[0][0]][next_move[0][1]]=state[next_move[1][0]][next_move[1][1]]
+    state[next_move[1][0]][next_move[1][1]]=temp
+
+# def move(current, next , state , color):
+    
+
+
 #======================================================================
 
 # Student SHOULD implement this function to change current state to new state properly
 def doit(move, state):
+    swapPosition(move,state)
     new_state = board_copy(state)
     return new_state
 
@@ -48,6 +58,21 @@ Initial_Board = [
 #     0 1 2 3 4
 #======================================================================
 
+def check_winner(state):
+    red = 0;
+    blue = 0;
+    for i in range(len(state)) :
+        for j in  range(len(state[i])):
+            if(state[i][j] == 'b'):
+                blue++;
+            if (state[i][j] == 'r'):
+                red++;
+    if (red == 0) :
+        return 'b'
+    elif (blue == 0):
+        return 'r'
+    else :
+        return
 
 def play(student_a, student_b, start_state=Initial_Board):
     player_a = imp.load_source(student_a, student_a + ".py")

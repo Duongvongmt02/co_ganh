@@ -32,8 +32,6 @@ class Player:
         result = [(2, 0), (3, 1)]
         return result
 
-    
-
     def get_next_posible_position(self,state,curPosition):
         if(state[curPosition[0]][curPosition[1]] == '.'):
             return []
