@@ -94,14 +94,14 @@ Initial_Board = [
 #======================================================================
 
 def check_winner(state):
-    red = 0;
-    blue = 0;
+    red = 0
+    blue = 0
     for i in range(len(state)) :
         for j in  range(len(state[i])):
             if(state[i][j] == 'b'):
-                blue++;
+                blue+=1
             if (state[i][j] == 'r'):
-                red++;
+                red+=1
     if (red == 0) :
         return 'b'
     elif (blue == 0):
@@ -128,6 +128,7 @@ def play(student_a, student_b, start_state=Initial_Board):
 
         start = time.time()
         move = curr_player.next_move(state)
+        print('Next available position', curr_player.get_next_posible_position(state,(0,2)))
         elapse = time.time() - start
 
         # print(move)
