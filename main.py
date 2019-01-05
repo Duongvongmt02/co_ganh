@@ -5,10 +5,10 @@ import time
 
 AROUND_ARRAY_EVEN = [(-1,-1,1,1),(-1,0,1,0),(-1,1,1,-1),(0,1,0,-1)]                       
 AROUND_ARRAY_ODD = [(-1,0,1,0),(0,1,0,-1)]
-AROUND_ARRAY_X = [(0,1),(0,-1)] # X=0
-AROUND_ARRAY_Y = [1,0,-1,0] #Y=0
+AROUND_ARRAY_OUT_X = [(1,0),(-1,0)] # X=0 or X=4
+AROUND_ARRAY_OUT_Y = [0,1,0,-1] #Y=0 OR Y=4
 POSITION_ARRAY_CORNER = [(0,0),(4,4),(0,4),(4,0)]
-
+SIZE = 5
 def board_print(board, move=[], num=0):
 
     print("====== The current board(", num, ")is (after move): ======")
@@ -34,33 +34,61 @@ def swapPosition(next_move,state):
     state[next_move[0][0]][next_move[0][1]]=state[next_move[1][0]][next_move[1][1]]
     state[next_move[1][0]][next_move[1][1]]=temp
 
-def checkPosition(position):
-    for coordinate in POSITION_ARRAY_CORNER:
-        if(coordinate == position): return -10; # if coordinate at corner
-    if(position[0] == 0): return -1 # if coordinate x =0
-    elif(position[1] == 0): return 1 # if coordinate y = 0
-    else: return 0 # if coordinate at another
+# def checkPosition(position):
+#     for coordinate in POSITION_ARRAY_CORNER:
+#         if(coordinate == position): return -10; # if coordinate at corner
+#     if(position[0] == 0 or position[0] == 4): return 1 # if coordinate y =0 or y=4
+#     elif(position[1] == 0 or position[1] == 4): return -1 # if coordinate x=0 or x=4
+#     else: return 0 # if coordinate at another
 
-def changeColor(position_1, position_2, state , color):
-    state[position_1[0]][position_1[1]] = color
-    state[position_2[0]][position_2[1]] = color
+def changeColor(position_above, position_below, state , color):
+    state[position_above[0]][position_above[1]] = color
+    state[position_below[0]][position_below[1]] = color
 
-def isOther(position_above,position_below,state,color,check):
-    if(check==-1):
-            if(state[position_above[0]][position_above[1]]==color and state[position_below[0]][position_below[1]] == color):
-                return true; 
-
+def has_carry(position_above,position_below,state,color):
+    if(state[position_above[0]][position_above[1]]=='.' or state[position_below[0]][position_below[1]]=='.'): 
+        return False
+    if(state[position_above[0]][position_above[1]]==color or state[position_below[0]][position_below[1]] == color ):
+        return False 
+    else: return True
 
 def carry(position,state):
-    check = checkPosition(position)
-    if(check == -10): return
-    if(check == -1): 
+    # check = checkPosition(position)
+    deltas=[]
+    color='.'
+    if((position[0]+position[1])%2==0):
+        deltas=AROUND_ARRAY_EVEN
+    else: deltas=AROUND_ARRAY_ODD
+    for delta in deltas:
         color=state[position[0]][position[1]]
-        position_above = position + AROUND_ARRAY_X[0]
-        position_below = position - AROUND_ARRAY_X[1]   
-        if(isOther(position_above,position_below,state,check)):
-            changeColor(position_below,position_above,state,color)
-
+        pos_1 = (position[0] + delta[0],position[1] + delta[1])
+        pos_2 = (position[0] + delta[2],position[1] + delta[3])
+        if(pos_1[0] >= 0 and pos_1[0] < SIZE and pos_1[1] >=0 and pos_1[1] < SIZE 
+            and pos_2[0] >= 0 and pos_2[0] < SIZE and pos_2[1] >=0 and pos_2[1] < SIZE):
+            if(has_carry(pos_1,pos_2,state,color)): changeColor(pos_1,pos_2,state,color)
+    # if(check == -10): return
+    # if(check == -1): 
+    #     position_above= [-1,-1]
+    #     position_below= [-1,-1]
+    #     color=''
+    #     color=state[position[0]][position[1]]
+    #     position_above[0] = position[0] + AROUND_ARRAY_OUT_X[0][0]
+    #     position_above[1] = position[1] + AROUND_ARRAY_OUT_X[0][1]
+    #     position_below[0] = position[0] + AROUND_ARRAY_OUT_X[1][0]
+    #     position_below[1] = position[1] + AROUND_ARRAY_OUT_X[1][1]   
+    #     if(not isOther(position_above,position_below,state,color,check)):
+    #         changeColor(position_below,position_above,state,color)
+    # if(check == 1):
+    #     position_above = [-1,-1]
+    #     position_below = [-1,-1]
+    #     color = ''
+    #     color = state[position[0]][position[1]]
+    #     position_above[0] = position[0] + AROUND_ARRAY_OUT_Y[0][0]
+    #     position_above[1] = position[1] + AROUND_ARRAY_OUT_Y[0][1]
+    #     position_below[0] = position[0] + AROUND_ARRAY_OUT_Y[1][0]
+    #     position_below[1] = position[1] + AROUND_ARRAY_OUT_Y[1][1]
+    #     if(not isOther(position_above,position_below,state,color,check)):
+    #         changeColor(position_below,position_above,state,color)
 
 # def move(current, next , state , color):
     
@@ -71,18 +99,18 @@ def carry(position,state):
 # Student SHOULD implement this function to change current state to new state properly
 def doit(move, state):
     swapPosition(move,state)
-    position=move[1]
+    position=move[1] # assign position by the next move
     carry(position,state)
     new_state = board_copy(state)
     return new_state
 
 #======================================================================
 Initial_Board = [
-                  ['b', 'b', 'b', 'b', 'b'], \
-                  ['b', '.', '.', '.', 'b'], \
-                  ['b', '.', '.', '.', 'r'], \
-                  ['r', '.', '.', '.', 'r'], \
-                  ['r', 'r', 'r', 'r', 'r'], \
+                  ['b', 'b', 'b', 'b', '.'], \
+                  ['r', '.', '.', 'r', 'b'], \
+                  ['b', 'b', 'b', 'r', '.'], \
+                  ['r', '.', 'b', '.', 'b'], \
+                  ['r', 'r', '.', 'r', 'r'], \
                 ]
 
 # 4 : r r r r r
@@ -152,6 +180,7 @@ def play(student_a, student_b, start_state=Initial_Board):
             curr_player = b
         else:
             curr_player = a
+        break;
 
     print("Game Over")
     if curr_player == a:

@@ -29,7 +29,7 @@ class Player:
         # (row1, col1): current position of selected piece
         # (row2, col2): new position of selected piece
     def next_move(self, state):
-        result = [(2, 0), (3, 1)]
+        result = [(1,0), (1, 1)]
         return result
 
     def get_next_posible_position(self,state,curPosition):
